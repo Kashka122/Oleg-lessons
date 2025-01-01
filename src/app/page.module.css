@@ -1,3 +1,64 @@
-.test {
+body {
+    margin: 0;  
+    padding: 0;
 
+}
+.container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    height: 100vh;
+}
+.post {
+    width: 400px;
+    height: 180px;
+    text-align: center;
+    margin: 20px;
+    border: 1px solid lightgray;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.title{
+    padding: 8px;
+    font-size: 20px;
+    border-bottom: 1px solid lightgray;
+}
+
+.text{
+    padding: 8px;
+}
+
+.btn{
+    height: 24px;
+    font-size: 16px;
+    border-bottom-right-radius: 20px;    
+    border-bottom-left-radius: 20px;
+    transition: all 0.25s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn:hover{
+    background-color: lightgray;
+}
+
+.btn:active{
+    background-color: gray ;
+}
+
+.spinner{
+    width: 100px;
+    height: 100px;
+    border: 5px solid lightgray;
+    border-top-color: gray;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
 }
