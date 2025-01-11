@@ -3,27 +3,28 @@ import styles from './Modal.module.css';
 import { useState, useEffect } from 'react';
 
 interface ModalProps {
-  // made interface for props, to avoid warning of linter about props we've received
   active: boolean;
-  setActive: (active: boolean) => void;
-  id: number;
+  onOpen: (active: boolean) => void;
+  id: number | null;
+  setId: (id: number | null) => void
 }
 
-export function Modal({ active, setActive, id = 0 }: ModalProps) {
+export function Modal({ active, onOpen, id = 0, setId }: ModalProps) {
   const [post, setPost] = useState<{ title: string; body: string } | null>(
     null
-  ); // made types for post element, to avoid warning of linter about types on 44-45 lines
+  );
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-
-    fetch(`https://jsonplaceholder.typicode.com/posts/${id}`)
-    .then((response) => response.json())
-      .then((value) => setPost(value))
-      .catch((error) => setError(error))
-      .finally(() => setLoading(false));
+    if(id){
+      fetch(`https://jsonplaceholder.typicode.com/posts/${id}`)
+        .then((response) => response.json())
+        .then((value) => setPost(value))
+        .catch((error) => setError(error))
+        .finally(() => setLoading(false));
+    }
   }, [id]);
 
   const renderContent = () => {
@@ -51,7 +52,11 @@ export function Modal({ active, setActive, id = 0 }: ModalProps) {
   return (
     <div
       className={active ? `${styles.modal} ${styles.active}` : styles.modal}
-      onClick={() => setActive(false)}
+      onClick={() => {
+          setId(null);
+          onOpen(false)
+        }
+      }
     >
       <div
         className={styles.modal__content}

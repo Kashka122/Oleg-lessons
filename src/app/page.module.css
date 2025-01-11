@@ -3,6 +3,12 @@ body {
   padding: 0;
 }
 .container {
+display: flex;
+flex-direction: column;
+align-items: center;
+overflow-y: visible;
+}
+.posts {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
