@@ -30,9 +30,17 @@ export function Input({ type, placeholder, setId }: InputProps) {
         
     }
 
+    const enterKeyHandler = (e:React.KeyboardEvent<HTMLInputElement>) =>{
+      if( e.key === 'Enter'){
+        setUserId();
+      } else if (e.key === 'e'|| e.key === 'E'){
+        setValue(value.slice(0,value.length));
+      }
+    }
+
     return (
     <div className={styles.input}>
-      <input value={value} type={type} ref={inputRef} placeholder={placeholder} className={styles.input__line} onInput={handleInput}/>
+      <input value={value} type={type} ref={inputRef} placeholder={placeholder} className={styles.input__line} onInput={handleInput} onKeyDown={enterKeyHandler}/>
       <button className={styles.input__btn} onClick={setUserId}>
         <Image src="/search.svg" alt="Search icon" width={25} height={25} />
       </button>

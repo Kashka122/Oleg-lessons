@@ -18,28 +18,26 @@ export default function Home() {
   const [modalActive, setModalActive] = useState(false);
   const [idForModal, setIdForModal] = useState<number | null>(null);
   const [userId, setUserId] = useState<string>('');
-
   const abortControllerRef = useRef<AbortController|null>(null);
 
   useEffect(() => {
     abortControllerRef.current?.abort();
     abortControllerRef.current = new AbortController();
     setLoading(true);
-    if (userId){fetch(`https://jsonplaceholder.typicode.com/posts?userId=${userId}`, {signal: abortControllerRef.current?.signal})
-      .then((response) => response.json())
-      .then((value) => setPosts(value))
-      .catch((error) => setError(error))
-      .finally(() => setLoading(false));
+    let didAbort = false;
+    fetch(userId
+      ?`https://jsonplaceholder.typicode.com/posts?userId=${userId}`
+      :'https://jsonplaceholder.typicode.com/posts',
+      {signal: abortControllerRef.current?.signal}  
+    ).then((response) => response.json())
+    .then((value) => setPosts(value))
+    .catch((error) => {if (error.name === 'AbortError') {
+      didAbort = true;
     } else {
-      fetch('https://jsonplaceholder.typicode.com/posts', {signal: abortControllerRef.current?.signal})
-      .then((response) => response.json())
-      .then((value) => setPosts(value))
-      .catch((error) => setError(error))
-      .finally(() => setLoading(false));
-    }    
+      setError(error);
+    }})
+    .finally(() => { if (!didAbort){setLoading(false);}});  
   }, [userId]);
-
-  const abortErrorText = 'AbortError: signal is aborted without reason';
 
   const showPosts = (posts:List) =>{
     if(posts.length){
@@ -66,14 +64,13 @@ export default function Home() {
   }
 
   if (error) {
-    if (error != abortErrorText){ // Реализациб получше пока не придумал
     return (
       <div className={styles.container}>
         <Image src="/cross.svg" alt="Error sign" width={128} height={128} />        
         <div className={styles.error}>{String(error)}</div>
       </div>
     );
-  }
+  
   }
 
   if (loading) {
